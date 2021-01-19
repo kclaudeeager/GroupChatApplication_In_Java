@@ -1,0 +1,81 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 15 Jan 2021, 3:37:19 PM
+    Author     : Kwizera
+*/
+
+.vbox
+{
+    -fx-background-color:#ffcc99;
+    -fx-padding: 10 10 10 300;
+    -fx-fill: black;
+       -fx-font-size: 10pt;
+    -fx-font-family:Italic;
+    -fx-font-weight: bold;
+    
+}
+#menu
+{
+   -fx-alignment: CENTER_RIGHT;
+     -fx-padding:7; 
+    -fx-cursor:hand;
+    -fx-font-size: 10pt;
+    -fx-font-family:Italic;
+    -fx-font-weight: bold;  
+}
+#center{
+      -fx-alignment:TOP_CENTER;
+     -fx-padding:7; 
+    -fx-cursor:default;
+    -fx-font-size: 25pt;
+    -fx-font-family:Italic;
+    -fx-font-weight: bold; 
+     -fx-background-color:#ffcc99;
+    -fx-fill:#ffffff;
+}
+#bottom{
+     -fx-alignment: CENTER;
+     -fx-padding:10 10 10 50;
+     -fx-font-size: 15pt;
+    -fx-font-family:"Courier New"; 
+    -fx-font-weight: bold; 
+    -fx-background-color:#ffffaf;
+    
+}
+#Left{
+     -fx-alignment:CENTER_LEFT;
+     -fx-padding:10 10 10 10;
+      -fx-cursor:hand;
+     -fx-font-size: 10pt;
+    -fx-font-family:Italic;
+    -fx-font-weight: bold; 
+    -fx-background-color:#cccccc;
+}
+#header
+{
+   -fx-alignment:top-center;
+    
+     -fx-font-size: 20pt;
+    -fx-font-family:"Courier New"; 
+     
+    -fx-background-color:#ffffaf;
+    -fx-highlight-fill: -fx-accent;
+}
+#messages{
+    -fx-text-fill: -fx-text-inner-color;
+  
+    -fx-highlight-text-fill: -fx-text-inner-color;
+  
+  
+    -fx-background-radius: 3, 2;
+  -fx-background-color:#cccccc;
+  
+}
+#messagearea{
+     -fx-background-radius: 3, 4;
+      -fx-background-color:#cccccc;
+}
