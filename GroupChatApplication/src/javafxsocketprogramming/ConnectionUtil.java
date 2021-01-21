@@ -12,6 +12,6 @@ package javafxsocketprogramming;
  * static variables that holds host and port
  */
 public class ConnectionUtil {
-    public static String host="localhost";
+    public static String host="192.31.122.66";
     public static int port=8001;
 }

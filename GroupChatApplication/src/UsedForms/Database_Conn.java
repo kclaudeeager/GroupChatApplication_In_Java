@@ -30,7 +30,7 @@ public class Database_Conn {
     try{
        Class.forName("com.mysql.jdbc.Driver");   //register driver
 
-      connection=DriverManager.getConnection( "jdbc:mysql://localhost:3306/mult_user_chat","root","");
+      connection=DriverManager.getConnection( "jdbc:mysql://db4free.net:3306/mult_user_chat","kwizera_claude","kwizeraeager@14");
       System.out.println("Connected");
         
     }   catch (Exception ex)
