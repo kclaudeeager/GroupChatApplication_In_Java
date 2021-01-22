@@ -11,10 +11,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,7 +24,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -31,6 +35,7 @@ import javafx.stage.Stage;
 import javafxsocketprogramming.ConnectionUtil;
 import javafxsocketprogramming.ServerJavaFX;
 import javafxsocketprogramming.TaskReadThread;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -38,19 +43,37 @@ import javafxsocketprogramming.TaskReadThread;
  * @author Kwizera
  */
 public class ClientHomePage extends Application {
+    ClientHomePage client;
     TextField writemessage=new TextField();
      DataOutputStream output = null;
      DataInputStream Users=null;
+    public static TextField search=new TextField();
+     public static Button searching=new Button("Search");
 Label user=new Label();
  String Username;
   public static  ListView OnlineUsers=new ListView();
    public VBox messageArea=new VBox();
+   
     @Override
     public void start(Stage primaryStage) {
 BorderPane homepage=new BorderPane();
-TextField search=new TextField();
+
 search.setTooltip(new Tooltip("Search here"));
 search.setPromptText("Search");
+search.setOnKeyPressed(e->{
+    if(e.getCode()==KeyCode.ENTER)
+    {
+      SearchText();  
+    }
+});
+
+Image icon=new Image("search.png");
+searching.setGraphic(new ImageView(icon));
+searching.setOnAction(e->{
+ SearchText();
+});
+
+
 
 
         Username = Forms.User;
@@ -89,7 +112,7 @@ nav.setId("menu");
   Leftpane.getChildren().addAll(online,  OnlineUsers);
   OnlineUsers.getItems().add(user.getText());
   Leftpane.setId("Left");
-nav.getChildren().addAll(new MainMenu(),search,prof);
+nav.getChildren().addAll(new MainMenu(),search,searching,prof);
 homepage.setTop(nav);
 homepage.setCenter( centeralpane);
 homepage.setLeft(Leftpane);
@@ -133,6 +156,7 @@ primaryStage.setScene(scene);
             //create a thread in order to read message from server continuously
             TaskReadThread task = new TaskReadThread(socket, this);
             Thread thread = new Thread(task);
+            //task.Searc_Message(searching, search);
             thread.start();
             
             
@@ -140,6 +164,8 @@ primaryStage.setScene(scene);
             messageArea.getChildren().add(new Label(ex.toString() + '\n'));
             
         }
+       
+
       
                 
                   
@@ -172,12 +198,14 @@ primaryStage.setScene(scene);
                 if (message.length() == 0) {
                     return;
                 }
+                Date date=new Date();
+                String time=date.toString();
 
                 //send message to server
-                output.writeUTF("[" + username + "]: " + message + "");
+                output.writeUTF("[" + username + "]: " + message + "     "+time);
                 output.flush();
                 new Database_Conn().InsertMessages(username, message);
-
+                
                 //clear the textfield
                 writemessage.clear();
             } catch (IOException ex) {
@@ -187,4 +215,27 @@ primaryStage.setScene(scene);
         }
     
 }
+     public void setObject(ClientHomePage client)
+     {
+       this.client=client;  
+     }
+     private void SearchText()
+     {
+         for(int i=0;i<client.messageArea.getChildren().size();i++)
+{
+    Label Text=(Label)client.messageArea.getChildren().get(i);
+    
+    if(Text.getText().contains(search.getText()) || Text.getText().equalsIgnoreCase(search.getText())||
+            Text.getText().contains(search.getText().toUpperCase()) ||
+            Text.getText().toUpperCase().contains(search.getText().toUpperCase())|| Text.getText().toUpperCase().indexOf(search.getText().toUpperCase())!=-1)
+    {
+        Text.setId("find");
+    }
+    else
+    {
+      
+       Text.setId("messages"); 
+    }
+}   
+     }
 }

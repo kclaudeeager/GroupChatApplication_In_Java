@@ -30,7 +30,7 @@ public class Database_Conn {
     try{
        Class.forName("com.mysql.jdbc.Driver");   //register driver
 
-      connection=DriverManager.getConnection( "jdbc:mysql://db4free.net:3306/mult_user_chat","kwizera_claude","kwizeraeager@14");
+      connection=DriverManager.getConnection( "jdbc:mysql://db4free.net/mult_user_chat","kwizera_claude","kwizeraeager@14");
       System.out.println("Connected");
         
     }   catch (Exception ex)
@@ -90,10 +90,12 @@ public String GetData(String username,String password)
 public void InsertMessages(String Sender,String Message)
 {
     try{
+        
        int clientID=GetSender(Sender);
-      preparedStatement=createConnection().prepareStatement("insert into messages(Sender_Id,Text_messages) values(?,?)");
+      preparedStatement=createConnection().prepareStatement("insert into messages(Sender_Id,Text_messages,Time) values(?,?)");
       preparedStatement.setInt(1, clientID);
       preparedStatement.setString(2,Message );
+     //  preparedStatement.setString(3,time );
       preparedStatement.executeUpdate();
     }     catch (SQLException ex) {
               Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);

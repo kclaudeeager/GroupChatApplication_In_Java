@@ -10,7 +10,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -23,16 +25,21 @@ public class TaskReadThread implements Runnable {
     Socket socket;
     ClientHomePage client;
     DataInputStream input;
+    public Label ms;
 
     //constructor
     public TaskReadThread(Socket socket, ClientHomePage client) {
         this.socket = socket;
         this.client = client;
+        client.setObject(client);
     }
+    
+ 
 
     @Override 
     public void run() {
         //continuously loop it
+
         while (true) {
             try {
                 //Create data input stream
@@ -40,8 +47,9 @@ public class TaskReadThread implements Runnable {
 
                 //get input from the client
                 String message = input.readUTF();
-                Label ms=new Label(message+"\n");
+                 ms=new Label(message+"\n");
                 ms.setId("messages");
+                ms.setWrapText(true);
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {
                     //display the message in the textarea
@@ -54,4 +62,18 @@ public class TaskReadThread implements Runnable {
             }
         }
     }
+     /*  public void Searc_Message(Button bt,TextField tf)
+    {
+        
+      bt.setOnAction(e->{
+            while(true)
+    {
+    
+        if(ms.getText().contains(tf.getText()))
+        {
+          ms.setId("find");
+        }
+    }
+      });
+    }*/
 }
