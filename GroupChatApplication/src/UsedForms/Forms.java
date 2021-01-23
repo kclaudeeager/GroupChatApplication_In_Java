@@ -84,14 +84,18 @@ TextField name=new TextField();
         pass.setMinWidth(300);
         pass.setPromptText("Enter your password");
         pass.setTooltip(new Tooltip("paasword"));
+        
         Button submit=new Button("Login");
          String log=ClientHomePage.class.getResource("login.png").toExternalForm();
+           String p=ClientHomePage.class.getResource("password.png").toExternalForm();
+           
         submit.setGraphic(new ImageView(new Image(log)));
         //Button signup=new Button("Signup");
         Label message=new Label("Not have an account?");
         HBox hb=new HBox();
-        hb.setSpacing(10);
-        hb.getChildren().addAll(pass);
+        hb.setSpacing(1);
+        
+        hb.getChildren().addAll(new ImageView(new Image(p)),pass);
          message.setTextFill(Color.RED);     
          message.setId("sign");
            Label haveaccount=new Label("Arlead have an account?");

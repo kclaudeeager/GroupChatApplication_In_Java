@@ -5,6 +5,7 @@
  */
 package javafxsocketprogramming;
 
+import UsedForms.ClientHomePage;
 import UsedForms.Forms;
 import java.io.*;
 import java.net.*;
@@ -31,6 +32,7 @@ import javafx.stage.Stage;
 public class ServerJavaFX extends Application {
     public TextArea txtAreaDisplay;
     List<TaskClientConnection> connectionList = new ArrayList<TaskClientConnection>();
+      List<TaskReadThread> clients = new ArrayList<TaskReadThread>();
 
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
@@ -55,6 +57,7 @@ public class ServerJavaFX extends Application {
             try {
                 // Create a server socket
                 ServerSocket serverSocket = new ServerSocket(ConnectionUtil.port);
+               // Socket sock = new Socket(ConnectionUtil.host,8001);
                 
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(()
@@ -65,10 +68,15 @@ public class ServerJavaFX extends Application {
                     // Listen for a connection request, add new connection to the list
                     Socket socket = serverSocket.accept();
                     TaskClientConnection connection = new TaskClientConnection(socket, this);
+                    TaskReadThread connected=new TaskReadThread(socket,new ClientHomePage());
                     connectionList.add(connection);
+                    clients.add(connected);
                     txtAreaDisplay.appendText("New Client  "+Forms.User+"  With Ip "+ socket.getInetAddress().getHostAddress() +" is connected at"+ new Date() + '\n');
-
-
+                     //DataOutputStream online=new DataOutputStream(socket.getOutputStream());
+                     //online.writeUTF(Forms.User);
+                 
+                     
+                 
                     //create a new thread
                     Thread thread = new Thread(connection);
                     thread.start();

@@ -92,11 +92,12 @@ public void InsertMessages(String Sender,String Message)
     try{
         
        int clientID=GetSender(Sender);
-      preparedStatement=createConnection().prepareStatement("insert into messages(Sender_Id,Text_messages,Time) values(?,?)");
+      preparedStatement=createConnection().prepareStatement("insert into messages(Sender_Id,Text_messages) values(?,?)");
       preparedStatement.setInt(1, clientID);
       preparedStatement.setString(2,Message );
      //  preparedStatement.setString(3,time );
       preparedStatement.executeUpdate();
+      JOptionPane.showMessageDialog(null, "Sent");
     }     catch (SQLException ex) {
               Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
           }

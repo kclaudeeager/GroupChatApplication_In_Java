@@ -46,7 +46,7 @@ public class ClientHomePage extends Application {
      public static Button searching=new Button("Search");
 Label user=new Label();
  String Username;
-  public static  ListView OnlineUsers=new ListView();
+  public  ListView OnlineUsers=new ListView();
    public VBox messageArea=new VBox();
    
     @Override
@@ -105,7 +105,7 @@ nav.setId("menu");
   Label online=new Label("Online people");
   online.getStyleClass().add("Lables");
   Leftpane.getChildren().addAll(online,  OnlineUsers);
-  OnlineUsers.getItems().add(user.getText());
+ // OnlineUsers.getItems().add(user.getText());
   Leftpane.setId("Left");
 nav.getChildren().addAll(new MainMenu(),search,searching,prof);
 homepage.setTop(nav);
@@ -117,6 +117,12 @@ writemessage.setPromptText("Write the message");
 writemessage.setTooltip(new Tooltip("message"));
 Button Send=new Button("Send");
   Send.setOnAction(new ButtonListener());
+  writemessage.setOnKeyPressed(a->{
+      if(a.getCode()==KeyCode.ENTER)
+      {
+        new ButtonListener();
+      }
+  });
 messageText.getChildren().addAll(writemessage,Send);
  messageText.setHgrow(writemessage, Priority.ALWAYS); 
 homepage.setBottom(messageText);
@@ -220,7 +226,7 @@ primaryStage.setScene(scene);
 {
     Label Text=(Label)client.messageArea.getChildren().get(i);
     
-    if(Text.getText().toUpperCase().indexOf(search.getText().toUpperCase())!=-1)
+    if(Text.getText().toUpperCase().contains(search.getText().toUpperCase()))
     {
         Text.setId("find");
     }

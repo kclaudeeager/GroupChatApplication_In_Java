@@ -8,7 +8,10 @@ package javafxsocketprogramming;
 import UsedForms.ClientHomePage;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,10 +28,13 @@ public class TaskReadThread implements Runnable {
     Socket socket;
     ClientHomePage client;
     DataInputStream input;
+       DataInputStream user;
     public Label ms;
+     //ServerSocket serverS;
 
     //constructor
-    public TaskReadThread(Socket socket, ClientHomePage client) {
+    public TaskReadThread(Socket socket, ClientHomePage client) throws IOException {
+       // this.serverS = new ServerSocket(8001);
         this.socket = socket;
         this.client = client;
         client.setObject(client);
@@ -40,11 +46,14 @@ public class TaskReadThread implements Runnable {
     public void run() {
         //continuously loop it
 
+        
         while (true) {
             try {
                 //Create data input stream
+               // Socket ss=serverS.accept();
                 input = new DataInputStream(socket.getInputStream());
-
+               // user= new DataInputStream(socket.getInputStream());
+                //user=new DataInputStream(ss.getInputStream());
                 //get input from the client
                 String message = input.readUTF();
                  ms=new Label(message+"\n");
@@ -52,15 +61,20 @@ public class TaskReadThread implements Runnable {
                 ms.setWrapText(true);
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {
-                    //display the message in the textarea
+            
                     client.messageArea.getChildren().add(ms);
                 });
+                
             } catch (IOException ex) {
                 System.out.println("Error reading from server: " + ex.getMessage());
                 ex.printStackTrace();
                 break;
             }
         }
+    }
+    public void OnlineUsers(String User)
+    {
+        client.OnlineUsers.getItems().add(User);
     }
      /*  public void Searc_Message(Button bt,TextField tf)
     {
