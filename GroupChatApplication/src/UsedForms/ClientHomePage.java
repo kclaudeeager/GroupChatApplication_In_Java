@@ -5,18 +5,15 @@
  */
 package UsedForms;
 
-import static UsedForms.Forms.User;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,9 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafxsocketprogramming.ConnectionUtil;
-import javafxsocketprogramming.ServerJavaFX;
 import javafxsocketprogramming.TaskReadThread;
-import javax.swing.JOptionPane;
 
 
 /**
@@ -66,8 +61,8 @@ search.setOnKeyPressed(e->{
       SearchText();  
     }
 });
-
-Image icon=new Image("search.png");
+String image1=ClientHomePage.class.getResource("search.png").toExternalForm();
+Image icon=new Image(image1);
 searching.setGraphic(new ImageView(icon));
 searching.setOnAction(e->{
  SearchText();
@@ -225,16 +220,16 @@ primaryStage.setScene(scene);
 {
     Label Text=(Label)client.messageArea.getChildren().get(i);
     
-    if(Text.getText().contains(search.getText()) || Text.getText().equalsIgnoreCase(search.getText())||
-            Text.getText().contains(search.getText().toUpperCase()) ||
-            Text.getText().toUpperCase().contains(search.getText().toUpperCase())|| Text.getText().toUpperCase().indexOf(search.getText().toUpperCase())!=-1)
+    if(Text.getText().toUpperCase().indexOf(search.getText().toUpperCase())!=-1)
     {
         Text.setId("find");
     }
     else
     {
-      
-       Text.setId("messages"); 
+       
+           Text.setId("messages"); 
+
+    
     }
 }   
      }

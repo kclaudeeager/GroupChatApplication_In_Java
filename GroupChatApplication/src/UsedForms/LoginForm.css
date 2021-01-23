@@ -10,13 +10,16 @@ and open the template in the editor.
 
 .vbox
 {
-    -fx-background-color:#ffcc99;
-    -fx-padding: 10 10 10 300;
+    -fx-background-color:#001133;
+    -fx-padding: 30 10 10 60;
     -fx-fill: black;
        -fx-font-size: 10pt;
     -fx-font-family:Italic;
     -fx-font-weight: bold;
-    
+    -fx-border-radius: 50px;
+    -fx-background-radius: 3, 2;
+    -fx-arc-width: 30;
+    -fx-text-fill: white;
 }
 #menu
 {
@@ -46,6 +49,20 @@ and open the template in the editor.
     -fx-background-color:#ffffaf;
     
 }
+#sign
+{
+    -fx-fill:#ffffff; 
+      -fx-font-family:Italic;
+      -fx-font-style: italic;
+}
+#sign:hover
+{
+      -fx-font-size: 15pt; 
+      -fx-cursor:hand; 
+      -fx-underline: true;
+       -fx-font-family:Italic;
+      
+}
 #Left{
      -fx-alignment:CENTER_LEFT;
      -fx-padding:10 10 10 10;
@@ -57,12 +74,13 @@ and open the template in the editor.
 }
 #header
 {
+     -fx-padding: 80 5 5 60;
    -fx-alignment:top-center;
-    
-     -fx-font-size: 20pt;
+     -fx-text-fill:#ffffff;
+     -fx-font-size: 30pt;
     -fx-font-family:"Courier New"; 
-     
-    -fx-background-color:#ffffaf;
+     -fx-font-weight: bold; 
+   -fx-background-color:#34495e; 
     -fx-highlight-fill: -fx-accent;
 }
 #messages{
@@ -75,6 +93,11 @@ and open the template in the editor.
   -fx-background-color:#cccccc;
   
 }
+#messages:hover
+{
+    -fx-cursor:hand; 
+     -fx-font-size: 25pt;
+}
 #messagearea{
      -fx-background-radius: 3, 4;
       -fx-background-color:#cccccc;
@@ -82,4 +105,13 @@ and open the template in the editor.
 #find
 {
     -fx-background-color:#ffcc33;
+}
+#loginpage
+{
+  -fx-alignment: CENTER;
+   -fx-background-color:#ffffaf;
+}
+#AllPage
+{
+   -fx-background-color:#34495e;  
 }

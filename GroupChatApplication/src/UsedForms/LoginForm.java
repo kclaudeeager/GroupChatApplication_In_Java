@@ -26,16 +26,17 @@ public class LoginForm extends Application {
     public void start(Stage primaryStage) {
       Forms Login=new Forms();
       Label Ta=new Label();
-      String header="Welcome to the multi-user Chat Please Login to get started or create one !";
+    
+       String header="Login";
       Ta.setText(header);
      Ta.setId("header");
-      Ta.setMaxHeight(15);
+      Ta.setMinWidth(1000);
    
       Allpage.setTop(Ta);
       Allpage.setCenter(Login.Login(primaryStage));
       //Allpage.setRight(Login.Signup(primaryStage));
       Scene scene=new Scene(Allpage,1200,700);
-        
+        Allpage.setId("AllPage");
         String css=LoginForm.class.getResource("LoginForm.css").toExternalForm();
         scene.getStylesheets().clear();
       scene.getStylesheets().add(css);
