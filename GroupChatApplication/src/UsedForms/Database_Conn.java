@@ -52,7 +52,7 @@ public class Database_Conn {
             preparedStatement.setString(4,username);
             preparedStatement.setString(5,password);
             preparedStatement.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Well Inserted !");
+           // JOptionPane.showMessageDialog(null,"Well Inserted !");
         
      }
      catch(Exception e)
