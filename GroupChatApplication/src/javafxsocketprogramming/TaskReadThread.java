@@ -6,16 +6,17 @@
 package javafxsocketprogramming;
 
 import UsedForms.ClientHomePage;
+import UsedForms.Database_Conn;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 
 /**
  *
@@ -23,12 +24,12 @@ import javafx.scene.control.TextField;
  * 
  * It is used to get input from server simultaneously
  */
-public class TaskReadThread implements Runnable {
+public class TaskReadThread implements Runnable,java.io.Serializable {
     //private variables
     Socket socket;
     ClientHomePage client;
     DataInputStream input;
-       DataInputStream user;
+  String users;
     public Label ms;
      //ServerSocket serverS;
 
@@ -52,16 +53,39 @@ public class TaskReadThread implements Runnable {
                 //Create data input stream
                // Socket ss=serverS.accept();
                 input = new DataInputStream(socket.getInputStream());
-               // user= new DataInputStream(socket.getInputStream());
+              // user= new ObjectInputStream(socket.getInputStream());
+              
                 //user=new DataInputStream(ss.getInputStream());
                 //get input from the client
-                String message = input.readUTF();
-                 ms=new Label(message+"\n");
+                Database_Conn Db=new Database_Conn();
+              ArrayList Online=Db.LoggedinUsers();
+               
+                // String online=user.readObject().toString();
+               for(int i=0;i<Online.size();i++)
+                {
+                     
+                    String message = input.readUTF();
+                   if(message.equals(Online.get(i)))
+                   { 
+                        users=message;
+                         Platform.runLater(() -> {
+                     client.OnlineUsers.getItems().add(users);
+                 });
+                   }
+                   else
+                   {
+                     ms=new Label(message.toString()+"\n");
+                     
+                      
+                   }
+                }
+               
                 ms.setId("messages");
                 ms.setWrapText(true);
+              
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {
-            
+                     client.OnlineUsers.getItems().add(users);
                     client.messageArea.getChildren().add(ms);
                 });
                 
@@ -69,13 +93,12 @@ public class TaskReadThread implements Runnable {
                 System.out.println("Error reading from server: " + ex.getMessage());
                 ex.printStackTrace();
                 break;
-            }
+            } catch (SQLException ex) {
+                Logger.getLogger(TaskReadThread.class.getName()).log(Level.SEVERE, null, ex);
+            } 
         }
     }
-    public void OnlineUsers(String User)
-    {
-        client.OnlineUsers.getItems().add(User);
-    }
+ 
      /*  public void Searc_Message(Button bt,TextField tf)
     {
         

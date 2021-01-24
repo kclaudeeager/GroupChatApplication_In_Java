@@ -5,11 +5,16 @@
  */
 package javafxsocketprogramming;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import UsedForms.Database_Conn;
+import java.io.*;
+
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 
 /**
  *
@@ -22,7 +27,9 @@ public  class TaskClientConnection implements Runnable {
     // Create data input and output streams
     DataInputStream input;
     DataOutputStream output;
-
+   ObjectInputStream oistream;
+   ObjectOutputStream oustream;
+   
     public TaskClientConnection(Socket socket, ServerJavaFX server) {
         this.socket = socket;
         this.server = server;
@@ -37,17 +44,35 @@ public  class TaskClientConnection implements Runnable {
                     socket.getInputStream());
             output = new DataOutputStream(
                     socket.getOutputStream());
-
+             // oistream=new  ObjectInputStream(socket.getInputStream());
+              //oustream=new ObjectOutputStream(socket.getOutputStream());
             while (true) {
                 // Get message from the client
                 String message = input.readUTF();
-
+              
+                    Database_Conn Db=new Database_Conn();
+                   ArrayList Online=Db.LoggedinUsers();
+               
+                // String online=user.readObject().toString();
+               for(int i=0;i<Online.size();i++)
+                {
+                     
+                 if(message.equals(Online.get(i)))
+                   { 
+                    server.SendUsers(message);
+                       
+                   }
+                   else
+                       server.broadcast(message);
+                }
                 //send message via server broadcast
-                server.broadcast(message);
+                
+              
                 
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {                    
                     server.txtAreaDisplay.appendText(message + "\n");
+                    
                 });
             }
             
@@ -55,6 +80,8 @@ public  class TaskClientConnection implements Runnable {
 
         } catch (IOException ex) {
             ex.printStackTrace();
+        } catch (SQLException ex) {
+            Logger.getLogger(TaskClientConnection.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 socket.close();
@@ -68,6 +95,16 @@ public  class TaskClientConnection implements Runnable {
 
     //send message back to client
     public void sendMessage(String message) {
+          try {
+            output.writeUTF(message);
+            output.flush();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } 
+       
+    }
+      public void GetUsers(String message) {
           try {
             output.writeUTF(message);
             output.flush();

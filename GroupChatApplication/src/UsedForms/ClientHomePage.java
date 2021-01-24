@@ -30,6 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafxsocketprogramming.ConnectionUtil;
+import javafxsocketprogramming.ServerJavaFX;
 import javafxsocketprogramming.TaskReadThread;
 
 
@@ -39,11 +40,12 @@ import javafxsocketprogramming.TaskReadThread;
  */
 public class ClientHomePage extends Application {
     ClientHomePage client;
+    ServerJavaFX server=new ServerJavaFX ();
     TextField writemessage=new TextField();
      DataOutputStream output = null;
      DataInputStream Users=null;
-    public static TextField search=new TextField();
-     public static Button searching=new Button("Search");
+    public TextField search=new TextField();
+     public Button searching=new Button("Search");
 Label user=new Label();
  String Username;
   public  ListView OnlineUsers=new ListView();
@@ -105,7 +107,7 @@ nav.setId("menu");
   Label online=new Label("Online people");
   online.getStyleClass().add("Lables");
   Leftpane.getChildren().addAll(online,  OnlineUsers);
- // OnlineUsers.getItems().add(user.getText());
+
   Leftpane.setId("Left");
 nav.getChildren().addAll(new MainMenu(),search,searching,prof);
 homepage.setTop(nav);
@@ -158,6 +160,7 @@ primaryStage.setScene(scene);
             TaskReadThread task = new TaskReadThread(socket, this);
             Thread thread = new Thread(task);
             //task.Searc_Message(searching, search);
+          
             thread.start();
             
             

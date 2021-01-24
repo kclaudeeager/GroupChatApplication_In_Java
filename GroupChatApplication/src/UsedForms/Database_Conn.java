@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author Kwizera
  */
-public class Database_Conn {
+public class Database_Conn  {
       PreparedStatement preparedStatement;
   ResultSet resultSet=null;
      public Connection createConnection(){
@@ -87,6 +87,20 @@ public String GetData(String username,String password)
     }
     return null;
 }
+public ArrayList<String> LoggedinUsers() throws SQLException
+{
+   ArrayList users=new ArrayList<String>();
+     preparedStatement=createConnection().prepareStatement("select username from users");
+     
+      resultSet=preparedStatement.executeQuery();
+      while(resultSet.next())
+      {
+          users.add(resultSet.getString("username"));
+          
+      }
+    
+      return users;
+}
 public void InsertMessages(String Sender,String Message)
 {
     try{
@@ -97,7 +111,7 @@ public void InsertMessages(String Sender,String Message)
       preparedStatement.setString(2,Message );
      //  preparedStatement.setString(3,time );
       preparedStatement.executeUpdate();
-      JOptionPane.showMessageDialog(null, "Sent");
+     
     }     catch (SQLException ex) {
               Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
           }

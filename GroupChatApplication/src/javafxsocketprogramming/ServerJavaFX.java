@@ -16,6 +16,7 @@ import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -29,11 +30,11 @@ import javafx.stage.Stage;
  * It also uses TaskClientConnection.java file to use in a thread which represents each new connection
  * 
  */
-public class ServerJavaFX extends Application {
+public class ServerJavaFX extends Application implements java.io.Serializable {
     public TextArea txtAreaDisplay;
     List<TaskClientConnection> connectionList = new ArrayList<TaskClientConnection>();
-      List<TaskReadThread> clients = new ArrayList<TaskReadThread>();
-
+      List<TaskReadThread> clients = new ArrayList<>();
+public  List<String> onlineusers=new ArrayList<>();
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
         // Text area for displaying contents
@@ -72,11 +73,16 @@ public class ServerJavaFX extends Application {
                     connectionList.add(connection);
                     clients.add(connected);
                     txtAreaDisplay.appendText("New Client  "+Forms.User+"  With Ip "+ socket.getInetAddress().getHostAddress() +" is connected at"+ new Date() + '\n');
-                     //DataOutputStream online=new DataOutputStream(socket.getOutputStream());
-                     //online.writeUTF(Forms.User);
+                     DataOutputStream online=new DataOutputStream(socket.getOutputStream());
+                     onlineusers.add(Forms.User);
+                    online.writeUTF(Forms.User);
+                 //ObjectOutputStream online=new ObjectOutputStream(socket.getOutputStream());
+                 //online.writeObject(Forms.User.trim());
                  
-                     
-                 
+                        for(String user:onlineusers){
+                            //online.writeUTF(user);
+                              txtAreaDisplay.appendText(user+'\n');
+                        }
                     //create a new thread
                     Thread thread = new Thread(connection);
                     thread.start();
@@ -85,7 +91,8 @@ public class ServerJavaFX extends Application {
             } catch (IOException ex) {
                   txtAreaDisplay.appendText(ex.toString() + '\n');
             }
-        }).start();
+        }).start(); 
+   
     }
 
     /**
@@ -100,6 +107,11 @@ public class ServerJavaFX extends Application {
     public void broadcast(String message) {
         for (TaskClientConnection clientConnection : this.connectionList) {
             clientConnection.sendMessage(message);
+        }
+    }
+       public void SendUsers(String message) {
+        for (TaskClientConnection clientConnection : this.connectionList) {
+            clientConnection.GetUsers(message);
         }
     }
 }
