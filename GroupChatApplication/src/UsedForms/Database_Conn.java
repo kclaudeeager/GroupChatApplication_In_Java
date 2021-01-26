@@ -122,7 +122,7 @@ public ArrayList<Label> GetMessages()
 {
     ArrayList<Label> Sentmessages=new ArrayList<Label>();
   try{
-     preparedStatement=createConnection().prepareStatement("select users.username,messages.Text_messages,messages.Time from messages INNER JOIN users ON messages.Sender_Id=users.ID order by messages.sender_Id DESC");
+     preparedStatement=createConnection().prepareStatement("select users.username,messages.Text_messages,messages.Time from messages INNER JOIN users ON messages.Sender_Id=users.ID order by messages.messageId ASC");
     resultSet= preparedStatement.executeQuery();
     while(resultSet.next())
     {

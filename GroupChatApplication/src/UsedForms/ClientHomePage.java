@@ -197,6 +197,10 @@ primaryStage.setScene(scene);
         Text.setText(Text.getText().replace("[" + username + "]", "[ You ]"));
         Text.setId("user");
     }
+      else
+   {
+       Text.setId("other");
+   }
       
 }
 //  for(String user:loggedUser){
@@ -260,15 +264,16 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
                 }
                 Date date=new Date();
                 String time=date.toString();    
-                for(int i=0;i<client.messageArea.getChildren().size();i++)
-                {
-    Label Text=(Label)client.messageArea.getChildren().get(i);
-   if(message.startsWith("[" + username + "]"))
-    {
-        Text.setId("user");
-        
-    }
-                }
+//                for(int i=0;i<client.messageArea.getChildren().size();i++)
+//                {
+//    Label Text=(Label)client.messageArea.getChildren().get(i);
+//   if(message.startsWith("[" + username + "]"))
+//    {
+//        Text.setId("user");
+//        
+//    }
+//  
+//                }
                 //send message to server
                 String d=Dformat.format(date)+" "+Dtformat.format(now);
                 output.writeUTF("[" + username + "]: " + message + "     "+d);
@@ -296,7 +301,7 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
      }
      private void SearchText()
      {
-         boolean got=false;
+         boolean got=true;
          for(int i=0;i<client.messageArea.getChildren().size();i++)
 {
     Label Text=(Label)client.messageArea.getChildren().get(i);
@@ -310,15 +315,22 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
     else
     {
         got=false;
-       
-           Text.setId("messages"); 
+     if(Text.getText().startsWith("[" + username + "]"))
+    {
+        Text.setText(Text.getText().replace("[" + username + "]", "[ You ]"));
+        Text.setId("user");
+    }
+      else
+   {
+       Text.setId("other");
+   }
 
     
     }
     
 }  
-         if(got==false)
-             JOptionPane.showMessageDialog(null, "Not found!");
+//         if(got==false)
+//             JOptionPane.showMessageDialog(null, "Not found!");
      }
      
 }
