@@ -80,6 +80,12 @@ public class TaskReadThread implements Runnable,java.io.Serializable {
                
                 ms.setId("messages");
                 ms.setWrapText(true);
+//                String username=new ClientHomePage().username;
+//                if(ms.getText().startsWith("[" + username + "]"))
+//    {
+//        ms.setText(ms.getText().replace("[" + username + "]", "[ You ]"));
+//        ms.setId("user");
+//    }
               
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {

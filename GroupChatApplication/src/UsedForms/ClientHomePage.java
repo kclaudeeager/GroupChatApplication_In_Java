@@ -10,6 +10,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.application.Application;
@@ -35,6 +38,7 @@ import javafxsocketprogramming.ConnectionUtil;
 import javafxsocketprogramming.ServerJavaFX;
 
 import javafxsocketprogramming.TaskReadThread;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -49,7 +53,12 @@ public class ClientHomePage extends Application {
      DataInputStream Users=null;
     public TextField search=new TextField();
      public Button searching=new Button("Search");
-         String username ;
+      SimpleDateFormat Dformat=new  SimpleDateFormat("yyyy-MM-dd");
+        Date date=new Date();
+       // jLabel5.setText(Dformat.format(date));
+        DateTimeFormatter Dtformat=DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime now=LocalDateTime.now();
+        public  String username ;
 Label user=new Label();
  String Username;
   public ListView OnlineUsers=new ListView();
@@ -85,6 +94,9 @@ ImageView profile=new ImageView();
 VBox prof=new VBox();
 prof.getChildren().addAll(user);
 HBox nav=new HBox();
+Label dateLabel=new Label();
+
+        dateLabel.setText(Dformat.format(date)+" "+Dtformat.format(now));
 nav.setSpacing(20);
 nav.setId("menu");
   Label messages=new Label("Messages you have");
@@ -115,7 +127,7 @@ nav.setId("menu");
   Leftpane.getChildren().addAll(online,  OnlineUsers);
 
   Leftpane.setId("Left");
-nav.getChildren().addAll(new MainMenu(),search,searching,prof);
+nav.getChildren().addAll(dateLabel,new MainMenu(),search,searching,prof);
 homepage.setTop(nav);
 homepage.setCenter( centeralpane);
 homepage.setLeft(Leftpane);
@@ -124,13 +136,14 @@ HBox messageText=new HBox();
 writemessage.setPromptText("Write the message");
 writemessage.setTooltip(new Tooltip("message"));
 Button Send=new Button("Send");
-  Send.setOnAction(new ButtonListener());
-  writemessage.setOnKeyPressed(a->{
+writemessage.setOnKeyPressed(a->{
       if(a.getCode()==KeyCode.ENTER)
       {
         new ButtonListener();
       }
   });
+  Send.setOnAction(new ButtonListener());
+ 
 messageText.getChildren().addAll(writemessage,Send);
  messageText.setHgrow(writemessage, Priority.ALWAYS); 
 homepage.setBottom(messageText);
@@ -181,6 +194,7 @@ primaryStage.setScene(scene);
     
     if(Text.getText().startsWith("[" + username + "]"))
     {
+        Text.setText(Text.getText().replace("[" + username + "]", "[ You ]"));
         Text.setId("user");
     }
       
@@ -256,11 +270,12 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
     }
                 }
                 //send message to server
-                output.writeUTF("[" + username + "]: " + message + "     "+time);
+                String d=Dformat.format(date)+" "+Dtformat.format(now);
+                output.writeUTF("[" + username + "]: " + message + "     "+d);
                 output.flush();
                 
 
-                new Database_Conn().InsertMessages(username, message);
+                new Database_Conn().InsertMessages(username, message,d);
             
     
  
@@ -281,21 +296,29 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
      }
      private void SearchText()
      {
+         boolean got=false;
          for(int i=0;i<client.messageArea.getChildren().size();i++)
 {
     Label Text=(Label)client.messageArea.getChildren().get(i);
     
     if(Text.getText().toUpperCase().contains(search.getText().toUpperCase()))
     {
+        got=true;
+        if(got)
         Text.setId("find");
     }
     else
     {
+        got=false;
        
            Text.setId("messages"); 
 
     
     }
-}   
+    
+}  
+         if(got==false)
+             JOptionPane.showMessageDialog(null, "Not found!");
      }
+     
 }
