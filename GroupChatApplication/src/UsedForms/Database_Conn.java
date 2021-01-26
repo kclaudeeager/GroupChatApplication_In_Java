@@ -30,7 +30,7 @@ public class Database_Conn  {
     try{
        Class.forName("com.mysql.jdbc.Driver");   //register driver
 
-      connection=DriverManager.getConnection( "jdbc:mysql://db4free.net/mult_user_chat","kwizera_claude","kwizeraeager@14");
+      connection=DriverManager.getConnection( "jdbc:mysql://localhost/mult_user_chat","root","");
       System.out.println("Connected");
         
     }   catch (Exception ex)
@@ -87,20 +87,20 @@ public String GetData(String username,String password)
     }
     return null;
 }
-public ArrayList<String> LoggedinUsers() throws SQLException
-{
-   ArrayList users=new ArrayList<String>();
-     preparedStatement=createConnection().prepareStatement("select username from users");
-     
-      resultSet=preparedStatement.executeQuery();
-      while(resultSet.next())
-      {
-          users.add(resultSet.getString("username"));
-          
-      }
-    
-      return users;
-}
+//public ArrayList<String> LoggedinUsers() throws SQLException
+//{
+//   ArrayList users=new ArrayList<String>();
+//     preparedStatement=createConnection().prepareStatement("select username from users");
+//     
+//      resultSet=preparedStatement.executeQuery();
+//      while(resultSet.next())
+//      {
+//          users.add(resultSet.getString("username"));
+//          
+//      }
+//    
+//      return users;
+//}
 public void InsertMessages(String Sender,String Message)
 {
     try{
@@ -111,6 +111,7 @@ public void InsertMessages(String Sender,String Message)
       preparedStatement.setString(2,Message );
      //  preparedStatement.setString(3,time );
       preparedStatement.executeUpdate();
+      //JOptionPane.showMessageDialog(null, "sent");
      
     }     catch (SQLException ex) {
               Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,7 +122,7 @@ public ArrayList<Label> GetMessages()
 {
     ArrayList<Label> Sentmessages=new ArrayList<Label>();
   try{
-     preparedStatement=createConnection().prepareStatement("select users.username,messages.Text_messages,messages.Time from messages INNER JOIN users ON messages.Sender_Id=users.ID");
+     preparedStatement=createConnection().prepareStatement("select users.username,messages.Text_messages,messages.Time from messages INNER JOIN users ON messages.Sender_Id=users.ID order by messages.sender_Id DESC");
     resultSet= preparedStatement.executeQuery();
     while(resultSet.next())
     {

@@ -6,17 +6,12 @@
 package javafxsocketprogramming;
 
 import UsedForms.ClientHomePage;
-import UsedForms.Database_Conn;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+//import static javafxsocketprogramming.ServerJavaFX.loggedUser;
 
 /**
  *
@@ -47,6 +42,8 @@ public class TaskReadThread implements Runnable,java.io.Serializable {
     public void run() {
         //continuously loop it
 
+                
+    
         
         while (true) {
             try {
@@ -57,45 +54,45 @@ public class TaskReadThread implements Runnable,java.io.Serializable {
               
                 //user=new DataInputStream(ss.getInputStream());
                 //get input from the client
-                Database_Conn Db=new Database_Conn();
-              ArrayList Online=Db.LoggedinUsers();
-               
-                // String online=user.readObject().toString();
-               for(int i=0;i<Online.size();i++)
-                {
+//                Database_Conn Db=new Database_Conn();
+//              ArrayList Online=Db.LoggedinUsers();
+//               
+//                // String online=user.readObject().toString();
+//               for(int i=0;i<Online.size();i++)
+//                {
                      
                     String message = input.readUTF();
-                   if(message.equals(Online.get(i)))
-                   { 
-                        users=message;
-                         Platform.runLater(() -> {
-                     client.OnlineUsers.getItems().add(users);
-                 });
-                   }
-                   else
-                   {
-                     ms=new Label(message.toString()+"\n");
-                     
-                      
-                   }
-                }
+                      ms=new Label(message.toString()+"\n");
+//                   if(message.equals(Online.get(i)))
+//                   { 
+//                        users=message;
+//                         Platform.runLater(() -> {
+//                     client.OnlineUsers.getItems().add(users);
+//                 });
+//                   }
+//                   else
+//                   {
+//                   
+//                     
+//                      
+//                   }
+//                }
                
                 ms.setId("messages");
                 ms.setWrapText(true);
               
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {
-                     client.OnlineUsers.getItems().add(users);
+                     //client.OnlineUsers.getItems().add(users);
                     client.messageArea.getChildren().add(ms);
                 });
                 
             } catch (IOException ex) {
                 System.out.println("Error reading from server: " + ex.getMessage());
-                ex.printStackTrace();
                 break;
-            } catch (SQLException ex) {
-                Logger.getLogger(TaskReadThread.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+//            } catch (SQLException ex) {
+//                Logger.getLogger(TaskReadThread.class.getName()).log(Level.SEVERE, null, ex);
+//            } 
         }
     }
  
@@ -113,4 +110,5 @@ public class TaskReadThread implements Runnable,java.io.Serializable {
     }
       });
     }*/
+}
 }

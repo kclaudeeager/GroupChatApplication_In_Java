@@ -5,6 +5,7 @@
  */
 package UsedForms;
 
+import static UsedForms.Forms.loggedUser;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.application.Application;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -31,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafxsocketprogramming.ConnectionUtil;
 import javafxsocketprogramming.ServerJavaFX;
+
 import javafxsocketprogramming.TaskReadThread;
 
 
@@ -46,9 +49,11 @@ public class ClientHomePage extends Application {
      DataInputStream Users=null;
     public TextField search=new TextField();
      public Button searching=new Button("Search");
+         String username ;
 Label user=new Label();
  String Username;
-  public  ListView OnlineUsers=new ListView();
+  public ListView OnlineUsers=new ListView();
+
    public VBox messageArea=new VBox();
    
     @Override
@@ -75,7 +80,7 @@ searching.setOnAction(e->{
 
         Username = Forms.User;
 user.setText(Username);
-
+ username = user.getText();
 ImageView profile=new ImageView();
 VBox prof=new VBox();
 prof.getChildren().addAll(user);
@@ -98,6 +103,7 @@ nav.setId("menu");
    messageArea.getChildren().add(SentMessages);
   }
   sp.setContent(messageArea);
+  messageArea.setId("messagearea");
  
    VBox centeralpane=new VBox();
   centeralpane.getChildren().addAll(messages,sp);
@@ -165,22 +171,58 @@ primaryStage.setScene(scene);
             
             
         } catch (IOException ex) {
-            messageArea.getChildren().add(new Label(ex.toString() + '\n'));
+          //  messageArea.getChildren().add(new Label(ex.toString() + '\n'));
             
         }
        
-
-      
-                
-                  
-                
+ for(int i=0;i<client.messageArea.getChildren().size();i++)
+{
+    Label Text=(Label)client.messageArea.getChildren().get(i);
+    
+    if(Text.getText().startsWith("[" + username + "]"))
+    {
+        Text.setId("user");
     }
+      
+}
+//  for(String user:loggedUser){
+//                           // online.writeUTF(user);
+//                           
+//                         
+//                        }
+  for (String user : loggedUser) {
+                        // online.writeUTF(user);
+                        System.out.println(user + '\n');
+                    }
+//        loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
+//    
+//    for(String user:loggedUser){
+//        if(!OnlineUsers.getItems().contains(user))
+//            OnlineUsers.getItems().add(user);
+//        
+//    }
+//});
+//    
+
+loggedUser.addListener((ListChangeListener.Change<? extends String> c)->{
+           for(String user:loggedUser){
+               
+        if(!OnlineUsers.getItems().contains(user)&& user!=null)
+            OnlineUsers.getItems().add(user);
+        
+    
+    }
+});
+    }
+       
+    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
+        
     }
      private class ButtonListener implements EventHandler<ActionEvent> {
 
@@ -189,7 +231,7 @@ primaryStage.setScene(scene);
             try {
                 //get username and message
                 
-               String username = user.getText().trim();
+              username = user.getText().trim();
                 //String username = "kwizera".trim();
                 // String username = User.trim();
                 String message =writemessage.getText().trim();
@@ -203,13 +245,27 @@ primaryStage.setScene(scene);
                     return;
                 }
                 Date date=new Date();
-                String time=date.toString();
-
+                String time=date.toString();    
+                for(int i=0;i<client.messageArea.getChildren().size();i++)
+                {
+    Label Text=(Label)client.messageArea.getChildren().get(i);
+   if(message.startsWith("[" + username + "]"))
+    {
+        Text.setId("user");
+        
+    }
+                }
                 //send message to server
                 output.writeUTF("[" + username + "]: " + message + "     "+time);
                 output.flush();
-                new Database_Conn().InsertMessages(username, message);
                 
+
+                new Database_Conn().InsertMessages(username, message);
+            
+    
+ 
+      
+
                 //clear the textfield
                 writemessage.clear();
             } catch (IOException ex) {

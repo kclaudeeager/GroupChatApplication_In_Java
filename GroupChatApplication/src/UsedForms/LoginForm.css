@@ -20,6 +20,8 @@ and open the template in the editor.
     -fx-background-radius: 3, 2;
     -fx-arc-width: 30;
     -fx-text-fill: white;
+       -fx-border-radius:20 20 0 0;
+        -fx-background-radius: 20 20 0 0;
 }
 #menu
 {
@@ -89,7 +91,8 @@ and open the template in the editor.
     -fx-highlight-text-fill: -fx-text-inner-color;
   
   
-    -fx-background-radius: 3, 2;
+    -fx-background-radius: 20 20 0 0;
+
   -fx-background-color:#cccccc;
   
 }
@@ -98,10 +101,7 @@ and open the template in the editor.
     -fx-cursor:hand; 
      -fx-font-size: 25pt;
 }
-#messagearea{
-     -fx-background-radius: 3, 4;
-      -fx-background-color:#cccccc;
-}
+
 #find
 {
     -fx-background-color:#ffcc33;
@@ -114,4 +114,20 @@ and open the template in the editor.
 #AllPage
 {
    -fx-background-color:#34495e;  
+}
+#user{
+  
+        -fx-text-fill:#ffffff;
+      -fx-alignment:bottom-right;
+       -fx-padding: 10 5 5 50;
+       -fx-border-radius:20 20 0 0;
+        -fx-background-radius: 20 20 0 0;
+        -fx-background-color:#999999;
+}
+#user:hover{
+    -fx-cursor:hand; 
+     -fx-font-size: 25pt;
+}
+#messagearea{
+   -fx-background-color:#ffffff;
 }

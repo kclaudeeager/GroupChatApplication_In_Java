@@ -5,16 +5,10 @@
  */
 package javafxsocketprogramming;
 
-import UsedForms.Database_Conn;
 import java.io.*;
 
 import java.net.Socket;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 
 /**
  *
@@ -27,9 +21,9 @@ public  class TaskClientConnection implements Runnable {
     // Create data input and output streams
     DataInputStream input;
     DataOutputStream output;
-   ObjectInputStream oistream;
-   ObjectOutputStream oustream;
-   
+//   ObjectInputStream oistream;
+//   ObjectOutputStream oustream;
+//   
     public TaskClientConnection(Socket socket, ServerJavaFX server) {
         this.socket = socket;
         this.server = server;
@@ -49,22 +43,22 @@ public  class TaskClientConnection implements Runnable {
             while (true) {
                 // Get message from the client
                 String message = input.readUTF();
-              
-                    Database_Conn Db=new Database_Conn();
-                   ArrayList Online=Db.LoggedinUsers();
+                 server.broadcast(message);
+                   // Database_Conn Db=new Database_Conn();
+//                   ArrayList Online=Db.LoggedinUsers();
                
                 // String online=user.readObject().toString();
-               for(int i=0;i<Online.size();i++)
-                {
-                     
-                 if(message.equals(Online.get(i)))
-                   { 
-                    server.SendUsers(message);
-                       
-                   }
-                   else
-                       server.broadcast(message);
-                }
+//               for(int i=0;i<Online.size();i++)
+//                {
+//                     
+//                 if(message.equals(Online.get(i)))
+//                   { 
+//                    server.SendUsers(message);
+//                       
+//                   }
+//                   else
+//                    
+//                }
                 //send message via server broadcast
                 
               
@@ -74,20 +68,21 @@ public  class TaskClientConnection implements Runnable {
                     server.txtAreaDisplay.appendText(message + "\n");
                     
                 });
+                      
             }
             
-            
+//      socket.close();
 
         } catch (IOException ex) {
             ex.printStackTrace();
-        } catch (SQLException ex) {
-            Logger.getLogger(TaskClientConnection.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(TaskClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            try {
+                
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
 
         }
 
@@ -104,15 +99,15 @@ public  class TaskClientConnection implements Runnable {
         } 
        
     }
-      public void GetUsers(String message) {
-          try {
-            output.writeUTF(message);
-            output.flush();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } 
-       
-    }
+//      public void GetUsers(String message) {
+//          try {
+//            output.writeUTF(message);
+//            output.flush();
+//
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        } 
+//       
+//    }
 
 }

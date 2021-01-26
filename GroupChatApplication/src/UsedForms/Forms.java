@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 public class Forms {
     Database_Conn DC=new Database_Conn();  
 public static String User;
+public static ObservableList<String> loggedUser = FXCollections.observableArrayList();
 TextField name=new TextField();
  PasswordField pass=new PasswordField();
     static boolean isValid(String email) {
@@ -123,12 +124,16 @@ TextField name=new TextField();
         {
             if(e.getCode()==KeyCode.ENTER)
             {
-                 logingin();  
+                 logingin();
+                    if(!loggedUser.contains(User)&& User!=null)
+                       loggedUser.add(User);
             }
         });
         submit.setOnAction(e->{
       
        logingin();
+       if(!loggedUser.contains(User)&& User!=null)
+       loggedUser.add(User);
                });
         
         return loginpane;
