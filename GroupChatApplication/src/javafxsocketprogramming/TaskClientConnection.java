@@ -8,22 +8,27 @@ package javafxsocketprogramming;
 import java.io.*;
 
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
  *
  * @author Kwizera,It represents each new connection
  */
-public  class TaskClientConnection implements Runnable {
+public  class TaskClientConnection implements  Runnable,java.io.Serializable {
 
     Socket socket;
     ServerJavaFX server;
+    OutputStream fout;
+      InputStream fin;
     // Create data input and output streams
     DataInputStream input;
     DataOutputStream output;
-//   ObjectInputStream oistream;
-//   ObjectOutputStream oustream;
-//   
+    transient File file;
+ transient ObjectInputStream oistream;
+  transient ObjectOutputStream oustream;
+  
     public TaskClientConnection(Socket socket, ServerJavaFX server) {
         this.socket = socket;
         this.server = server;
@@ -36,32 +41,43 @@ public  class TaskClientConnection implements Runnable {
             // Create data input and output streams
             input = new DataInputStream(
                     socket.getInputStream());
+            fout= socket.getOutputStream();
             output = new DataOutputStream(
                     socket.getOutputStream());
-             // oistream=new  ObjectInputStream(socket.getInputStream());
-              //oustream=new ObjectOutputStream(socket.getOutputStream());
+            fin=socket.getInputStream();
+//              oistream=new  ObjectInputStream(socket.getInputStream());
+//              oustream=new ObjectOutputStream(socket.getOutputStream());
+ //FileOutputStream fos=null;
             while (true) {
                 // Get message from the client
-                String message = input.readUTF();
-                 server.broadcast(message);
-                   // Database_Conn Db=new Database_Conn();
-//                   ArrayList Online=Db.LoggedinUsers();
-               
-                // String online=user.readObject().toString();
-//               for(int i=0;i<Online.size();i++)
-//                {
-//                     
-//                 if(message.equals(Online.get(i)))
-//                   { 
-//                    server.SendUsers(message);
-//                       
-//                   }
-//                   else
-//                    
-//                }
-                //send message via server broadcast
                 
-              
+                 
+//                 int filesize=1022386;
+//            int bytesRead;
+//            int currentTot=0;
+//            byte [] bytearray=new byte[filesize];
+//           
+//            File file=new File("Image.png");
+//            fos = new FileOutputStream(file);
+//            BufferedOutputStream bos=new BufferedOutputStream(fos);
+//            bytesRead=fin.read(bytearray,0,bytearray.length);
+//            currentTot=bytesRead;
+//            do{
+//                bytesRead=fin.read(bytearray, currentTot, (bytearray.length-currentTot));
+//                if(bytesRead>=0)
+//                    currentTot+=bytesRead;
+//            }
+//            while(bytesRead>-1);
+//            bos.write(bytearray,0,currentTot);
+//            FileInputStream fin=new FileInputStream(file);
+//            bos.flush();
+               //file=(File)oistream.readObject();
+              //int bytes=fin.read(bytearray,0,bytearray.length);
+                String message = input.readUTF();
+                //server.SendUsersfiles(bytearray);
+                
+                 server.broadcast(message);
+    
                 
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {                    
@@ -71,21 +87,13 @@ public  class TaskClientConnection implements Runnable {
                       
             }
             
-//      socket.close();
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(TaskClientConnection.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            try {
-                
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
 
+     
         }
-
     }
 
     //send message back to client
@@ -95,19 +103,19 @@ public  class TaskClientConnection implements Runnable {
             output.flush();
 
         } catch (IOException ex) {
-            ex.printStackTrace();
         } 
        
     }
-//      public void GetUsers(String message) {
-//          try {
-//            output.writeUTF(message);
-//            output.flush();
-//
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        } 
-//       
-//    }
+
+
+    void GetUsersFile(byte[] bytearray) {
+       try{
+          
+           fout.write(bytearray,0,bytearray.length);
+           fout.flush();
+       } catch (IOException ex) {  
+            Logger.getLogger(TaskClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+    }
 
 }

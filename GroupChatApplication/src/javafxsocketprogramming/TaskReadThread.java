@@ -50,43 +50,14 @@ public class TaskReadThread implements Runnable,java.io.Serializable {
                 //Create data input stream
                // Socket ss=serverS.accept();
                 input = new DataInputStream(socket.getInputStream());
-              // user= new ObjectInputStream(socket.getInputStream());
-              
-                //user=new DataInputStream(ss.getInputStream());
-                //get input from the client
-//                Database_Conn Db=new Database_Conn();
-//              ArrayList Online=Db.LoggedinUsers();
-//               
-//                // String online=user.readObject().toString();
-//               for(int i=0;i<Online.size();i++)
-//                {
-                     
+                   
                     String message = input.readUTF();
                       ms=new Label(message.toString()+"\n");
-//                   if(message.equals(Online.get(i)))
-//                   { 
-//                        users=message;
-//                         Platform.runLater(() -> {
-//                     client.OnlineUsers.getItems().add(users);
-//                 });
-//                   }
-//                   else
-//                   {
-//                   
-//                     
-//                      
-//                   }
-//                }
+
                
                 ms.setId("messages");
                 ms.setWrapText(true);
-//                String username=new ClientHomePage().username;
-//                if(ms.getText().startsWith("[" + username + "]"))
-//    {
-//        ms.setText(ms.getText().replace("[" + username + "]", "[ You ]"));
-//        ms.setId("user");
-//    }
-              
+          
                 //append message of the Text Area of UI (GUI Thread)
                 Platform.runLater(() -> {
                      //client.OnlineUsers.getItems().add(users);
@@ -96,25 +67,9 @@ public class TaskReadThread implements Runnable,java.io.Serializable {
             } catch (IOException ex) {
                 System.out.println("Error reading from server: " + ex.getMessage());
                 break;
-//            } catch (SQLException ex) {
-//                Logger.getLogger(TaskReadThread.class.getName()).log(Level.SEVERE, null, ex);
-//            } 
+
+}
         }
     }
- 
-     /*  public void Searc_Message(Button bt,TextField tf)
-    {
-        
-      bt.setOnAction(e->{
-            while(true)
-    {
+}
     
-        if(ms.getText().contains(tf.getText()))
-        {
-          ms.setId("find");
-        }
-    }
-      });
-    }*/
-}
-}

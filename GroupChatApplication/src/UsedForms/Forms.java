@@ -87,8 +87,8 @@ TextField name=new TextField();
         pass.setTooltip(new Tooltip("paasword"));
         
         Button submit=new Button("Login");
-         String log=ClientHomePage.class.getResource("login.png").toExternalForm();
-           String p=ClientHomePage.class.getResource("password.png").toExternalForm();
+         String log=ClientHomePage.class.getResource("photos/login.png").toExternalForm();
+           String p=ClientHomePage.class.getResource("photos/password.png").toExternalForm();
            
         submit.setGraphic(new ImageView(new Image(log)));
         //Button signup=new Button("Signup");
@@ -195,7 +195,7 @@ TextField name=new TextField();
          register.setTextFill(Color.WHITE);
         register.getStyleClass().add("title");
         Button signup=new Button("Signup");
-         String sup=ClientHomePage.class.getResource("signup.png").toExternalForm();
+         String sup=ClientHomePage.class.getResource("photos/signup.png").toExternalForm();
          signup.setGraphic(new ImageView(new Image(sup)));
         
         signup.setOnAction(new EventHandler<ActionEvent>() {

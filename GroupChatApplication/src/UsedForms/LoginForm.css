@@ -96,7 +96,7 @@ and open the template in the editor.
     -fx-highlight-text-fill: -fx-text-inner-color;
   
   
-    -fx-background-radius: 20 20 0 0;
+    -fx-background-radius: 10 10 0 0;
 
     -fx-background-color:#999999;
   
@@ -125,9 +125,9 @@ and open the template in the editor.
   
         -fx-text-fill:#ffffff;
       -fx-alignment:bottom-right;
-       -fx-padding: 10 5 5 50;
-       -fx-border-radius:20 20 0 0;
-        -fx-background-radius: 20 20 0 0;
+     
+       -fx-border-radius:10 5 0 0;
+        -fx-background-radius: 10 10 0 0;
         -fx-background-color:#333333;
 }
 #user:hover{
@@ -136,4 +136,11 @@ and open the template in the editor.
 }
 #messagearea{
     -fx-background-color:#cccccc;
+}
+#time
+{
+    -fx-background-color:#cccccc;
+    -fx-text-fill:#ffffff;
+      -fx-font-family:Italic;
+       -fx-font-size: 10pt; 
 }

@@ -5,7 +5,6 @@
  */
 package javafxsocketprogramming;
 
-import UsedForms.ClientHomePage;
 import UsedForms.Forms;
 import static UsedForms.Forms.loggedUser;
 import java.io.*;
@@ -16,11 +15,7 @@ import java.util.List;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -111,6 +106,7 @@ public class ServerJavaFX extends Application implements java.io.Serializable {
     /**
      * The main method is only needed for the IDE with limited JavaFX support.
      * Not needed for running from the command line.
+     * @param args
      */
     public static void main(String[] args) {
 
@@ -123,10 +119,11 @@ public class ServerJavaFX extends Application implements java.io.Serializable {
             clientConnection.sendMessage(message);
         }
     }
-
-//    public void SendUsers(String message) {
-//        for (TaskClientConnection clientConnection : this.connectionList) {
-//            clientConnection.GetUsers(message);
-//        }
-//    }
+    
+//
+//  public void SendUsersfiles(byte[] bytearray) {
+//      for (TaskClientConnection clientConnection : this.connectionList) {
+//          clientConnection.GetUsersFile(bytearray);
+//      }
+//   }
 }
