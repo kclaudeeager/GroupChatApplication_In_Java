@@ -50,7 +50,7 @@ public class Database_Conn  {
     try{
        Class.forName("com.mysql.jdbc.Driver");   //register driver
 
-      connection=DriverManager.getConnection( "jdbc:mysql://db4free.net/mult_user_chat","kwizera_claude","kwizeraeager@14");
+      connection=DriverManager.getConnection( "jdbc:mysql://remotemysql.com/1aj1iyY7Kd","1aj1iyY7Kd","seMWU8RSow");
       System.out.println("Connected");
         
     }   catch (Exception ex)
