@@ -50,7 +50,7 @@ public class Database_Conn  {
     try{
        Class.forName("com.mysql.jdbc.Driver");   //register driver
 
-      connection=DriverManager.getConnection( "jdbc:mysql://localhost/mult_user_chat","root","");
+      connection=DriverManager.getConnection( "jdbc:mysql://db4free.net/mult_user_chat","kwizera_claude","kwizeraeager@14");
       System.out.println("Connected");
         
     }   catch (Exception ex)
@@ -64,7 +64,7 @@ public class Database_Conn  {
 
      try{
   
-         preparedStatement=createConnection().prepareStatement("insert into Users(firstname,lastname,Email,username,password) values(?,?,?,?,?)");
+         preparedStatement=createConnection().prepareStatement("insert into users(firstname,lastname,Email,username,password) values(?,?,?,?,?)");
             
             preparedStatement.setString(1, fn);
             preparedStatement.setString(2, ln);
@@ -77,7 +77,7 @@ public class Database_Conn  {
      }
      catch(Exception e)
      {
-      JOptionPane.showMessageDialog(null, "The account was taken !");
+      JOptionPane.showMessageDialog(null,e.getMessage());
      }
   }
 public String GetData(String username,String password)
@@ -183,15 +183,15 @@ preparedStatement.setString(1, Sender);
  }
  return senderId;
 }
-public void InsertPhoto(String Username,InputStream photo,String date,byte[] b)
+public void InsertPhoto(String Username,byte[] photo,String date)
         
 {
     try{
         
        int clientID=GetSender(Username);
-      preparedStatement=createConnection().prepareStatement("insert into Photos(Sender_Id,photo,Time) values(?,?,?)");
+      preparedStatement=createConnection().prepareStatement("insert into photos(Sender_Id,photo,Time) values(?,?,?)");
       preparedStatement.setInt(1, clientID);
-      preparedStatement.setBytes(2,b);
+      preparedStatement.setBytes(2,photo);
      preparedStatement.setString(3,date);
       preparedStatement.executeUpdate();
       //JOptionPane.showMessageDialog(null, "sent");

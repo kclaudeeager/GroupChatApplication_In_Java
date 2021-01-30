@@ -371,13 +371,14 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c) -> {
     private class UploadFile implements EventHandler<ActionEvent>,java.io.Serializable {
  final FileChooser fileChooser=new FileChooser();
   FileInputStream fin=null;
-  byte[] person_image;
+  byte[] file_image=null;
+  byte[] buf =null;
         @Override
         public void handle(ActionEvent event) {
              //To change body of generated methods, choose Tools | Templates.
         
              try{
-      final FileChooser fileChooser=new FileChooser();
+  
   
    configureFileChooser(fileChooser);
    Stage stage=new Stage();
@@ -390,13 +391,25 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c) -> {
                           
                            //fin = new FileInputStream(file);
                               //File image=new File (fin);
+                             // byte[] buf = null; byte[] person_image5=null;
+           
+
+   // File image=new File (df);
+   // FileInputStream fis=new FileInputStream(image);
+    //ByteArrayOutputStream bos= new ByteArrayOutputStream();
+    // buf=new byte[1024];
+    //for(int readnum;(readnum=fis.read(buf))!=-1; ){
+    //bos.write(buf,0,readnum);
+//}
+ //person_image5 = bos.toByteArray();
+
     fin=new FileInputStream(file);
     ByteArrayOutputStream bos= new ByteArrayOutputStream();
-                 byte[] buf = new byte[1024];
+                 buf = new byte[1024];
     for(int readnum;(readnum=fin.read(buf))!=-1; ){
     bos.write(buf,0,readnum);
 }
-                 person_image = bos.toByteArray();
+                file_image = bos.toByteArray();
 }    catch (FileNotFoundException ex) {
          Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
      } catch (IOException ex) { 
@@ -407,7 +420,7 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c) -> {
 //            BufferedInputStream bin=new BufferedInputStream(fin);
                String d=Dformat.format(date)+" "+Dtformat.format(now);
      
-            new Database_Conn().InsertPhoto(username,fin,d,person_image);
+            new Database_Conn().InsertPhoto(username,file_image,d);
 //            BufferedOutputStream out=null;
 //            bin.read(bytearray,0,bytearray.length);
 //            fout=socket.getOutputStream();
