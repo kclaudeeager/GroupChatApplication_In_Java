@@ -7,6 +7,8 @@ package UsedForms;
 
 import static UsedForms.Forms.loggedUser;
 import java.awt.Desktop;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -34,22 +36,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javafxsocketprogramming.TaskReadThread;
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -73,6 +83,8 @@ public class ClientHomePage extends Application  implements java.io.Serializable
         DateTimeFormatter Dtformat=DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now=LocalDateTime.now();
         public  String username ;
+        Image profileicon;
+        ImageView imageview;
 Label user=new Label();
  static String Username;
   public ListView OnlineUsers=new ListView();
@@ -80,7 +92,10 @@ Label user=new Label();
    public VBox messageArea=new VBox();
    
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws SQLException {
+   File file=new File("C:\\Users\\Kwizera\\Documents\\NetBeansProjects\\GroupChatApplication_In_Java\\GroupChatApplication\\src\\UsedForms\\photos/signup.png");
+
+  new Database_Conn().SetProfile(file);//Setting the difault profile image
 BorderPane homepage=new BorderPane();
 
 search.setTooltip(new Tooltip("Search here"));
@@ -100,13 +115,111 @@ searching.setOnAction(e->{
 
 
 
-
+//String profileimage=ClientHomePage.class.getResource("photos/signup.png").toExternalForm();
+ 
         Username = Forms.User;
 user.setText(Username);
  username = user.getText();
-ImageView profile=new ImageView();
+  //profileicon=new Image(profileimage);
+  profileicon=new Database_Conn().GetprofileImage(username);
+ImageView profile=new ImageView(profileicon);
+user.setGraphic(profile);
+
 VBox prof=new VBox();
 prof.getChildren().addAll(user);
+prof.setOnContextMenuRequested(e->{
+      Stage st=new Stage();
+    Pane pane = new Pane();
+    String profileDescription="Change your profile";
+     Label profiledes=new Label();
+    
+      profiledes.setText(profileDescription);
+     profiledes.setId("head");
+      profiledes.setMinWidth(300);
+    Label profileimag=new Label("Change profile image");
+    profileimag.getStyleClass().add("Labels");
+    imageview=new ImageView(profileicon);
+    ChangeProfile changeprof=new ChangeProfile();
+    imageview.setOnMousePressed(changeprof);
+    
+    
+    Label Usernamelabel=new Label("Change the user name");
+    Usernamelabel.getStyleClass().add("Labels");
+    TextField newUsername=new TextField(username);
+    Button update=new Button("Update profile");
+    String Updateicon=ClientHomePage.class.getResource("photos/update.png").toExternalForm();
+   update.setGraphic(new ImageView(new Image(Updateicon)));
+   update.setOnAction(event->{
+       int confirm=JOptionPane.showConfirmDialog(null," you sure you want to change profile?","Updating profileAre",JOptionPane.YES_NO_OPTION);
+       if(confirm==0)
+       {
+            profile.setImage(profileicon);
+           user.setText(newUsername.getText());
+           try {
+               new Database_Conn().UpdateUser(username, newUsername.getText(),changeprof.Getbytes());//Updating the profile of the user
+           } catch (SQLException ex) {
+               Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
+           }
+           Username=newUsername.getText();
+         
+          // st.close();
+       }
+   });
+   VBox vb=new VBox();
+   HBox profilehb=new HBox();
+   profilehb.getChildren().addAll(profileimag,imageview);
+   profilehb.setSpacing(15);
+   HBox Usernamehb=new HBox();
+   Usernamehb.getChildren().addAll(Usernamelabel,newUsername);
+   Usernamehb.setSpacing(15);
+   HBox functions=new HBox();//Holding button and change password enquiery label
+   Label pass=new Label("Want to change password !");
+ 
+   functions.getChildren().addAll(update,pass);
+   functions.setSpacing(20);
+   
+   vb.getChildren().addAll( profiledes,profilehb,Usernamehb,functions); 
+   pass.setId("sign");
+    PasswordField currentpass=new PasswordField();
+       currentpass.setPromptText("Enter the current password");
+       
+       PasswordField newpass=new PasswordField();
+       newpass.setPromptText("Enter the new passord");
+       PasswordField confirmpass=new PasswordField();
+       confirmpass.setPromptText("Confirm the new password");
+       Button changepass=new Button("Update password");
+   pass.setOnMousePressed(add->{
+      
+       vb.getChildren().addAll(currentpass,newpass,confirmpass,changepass);//appending other nodes to the pannel
+    
+       pass.setDisable(true);
+       
+       
+   });
+      changepass.setOnAction(value->{
+           
+          new Database_Conn().Updatepassword(username,currentpass.getText() ,newpass.getText(), confirmpass.getText());//Updating password
+           currentpass.setText(null);
+           newpass.setText(null);
+           confirmpass.setText(null);
+           
+           
+           
+       });
+   vb.setSpacing(10);
+   vb.getStyleClass().add("vbox");
+   pane.setId("AllPage");
+   pane.getChildren().add(vb);
+    Scene scene = new Scene(pane, 430, 370);
+    String css=ClientHomePage.class.getResource("LoginForm.css").toExternalForm();
+    scene.getStylesheets().add(css);
+  
+    st.setTitle("Update the user profile");
+    st.setScene(scene);
+    
+    st.show();
+    
+});
 HBox nav=new HBox();
 Label dateLabel=new Label();
 
@@ -155,7 +268,26 @@ nav.setId("menu");
   Leftpane.getChildren().addAll(online,  OnlineUsers);
 
   Leftpane.setId("Left");
-nav.getChildren().addAll(dateLabel,new MainMenu(),search,searching,prof);
+  Button Logout=new Button("Logout");
+  Logout.setId("sign");
+  Logout.setOnAction(action->{
+     int confirm= JOptionPane.showConfirmDialog(null, "Do you realy want to logout ?","Logging out",JOptionPane.YES_NO_OPTION);
+     if(confirm==0)
+     {
+         
+             if(Forms.loggedUser.contains(username))
+             {
+                 Forms.loggedUser.remove(user); 
+             }
+         
+        
+       primaryStage.close();
+       new LoginForm().start(primaryStage);
+       
+     }
+  });
+nav.getChildren().addAll(Logout,dateLabel,new MainMenu(),search,searching,prof);//Adding all itemes to navigation bar
+
 homepage.setTop(nav);
 homepage.setCenter( centeralpane);
 homepage.setLeft(Leftpane);
@@ -164,15 +296,16 @@ HBox messageText=new HBox();
 writemessage.setPromptText("Write the message");
 writemessage.setTooltip(new Tooltip("message"));
 Button Send=new Button("Send");
+ButtonListener buttonListener = new ButtonListener();
 writemessage.setOnKeyPressed((KeyEvent e) -> {
     if(e.getCode()==KeyCode.ENTER)
     {
-        ButtonListener buttonListener;
-        buttonListener = new ButtonListener();
+       ButtonListener buttListener = new ButtonListener();
     }
 });
+ 
   
-  Send.setOnAction(new ButtonListener());
+  Send.setOnAction(buttonListener);
   String upload=ClientHomePage.class.getResource("photos/upload.png").toExternalForm();
 
  Button sendfile=new Button("Upload file");
@@ -192,7 +325,7 @@ Scene scene=new Scene(homepage,1200,700);
 String css=LoginForm.class.getResource("LoginForm.css").toExternalForm();
         scene.getStylesheets().clear();
       scene.getStylesheets().add(css);
-
+primaryStage.setTitle("Chat appliction ");
 primaryStage.setScene(scene);
 
         primaryStage.show();
@@ -385,23 +518,7 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c) -> {
                 
                      File file=   fileChooser.showOpenDialog(stage);
                    
-                       
-                            
-                           // openFile(file);
-                          
-                           //fin = new FileInputStream(file);
-                              //File image=new File (fin);
-                             // byte[] buf = null; byte[] person_image5=null;
-           
-
-   // File image=new File (df);
-   // FileInputStream fis=new FileInputStream(image);
-    //ByteArrayOutputStream bos= new ByteArrayOutputStream();
-    // buf=new byte[1024];
-    //for(int readnum;(readnum=fis.read(buf))!=-1; ){
-    //bos.write(buf,0,readnum);
-//}
- //person_image5 = bos.toByteArray();
+      
 
     fin=new FileInputStream(file);
     ByteArrayOutputStream bos= new ByteArrayOutputStream();
@@ -415,24 +532,80 @@ loggedUser.addListener((ListChangeListener.Change<? extends String> c) -> {
      } catch (IOException ex) { 
          Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
      }
-                            messageArea.getChildren().addAll(new ImageView(new Image(fin)));
+                  try {
+          ByteArrayInputStream bis= new ByteArrayInputStream(file_image);
+         BufferedImage bim=ImageIO.read(bis);
+         profileicon=SwingFXUtils.toFXImage(bim, null );
+     } catch (IOException ex) 
+     {
+         Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
+     }
+                            messageArea.getChildren().addAll(new ImageView(profileicon));
 //                           byte[]bytearray=new byte [(int)file.length()];
 //            BufferedInputStream bin=new BufferedInputStream(fin);
                String d=Dformat.format(date)+" "+Dtformat.format(now);
      
             new Database_Conn().InsertPhoto(username,file_image,d);
-//            BufferedOutputStream out=null;
-//            bin.read(bytearray,0,bytearray.length);
-//            fout=socket.getOutputStream();
-           
-            //out=new BufferedOutputStream(socket.getOutputStream());
-            
-            //System.out.println("sending Files.......");
-           // fout.write(bytearray,0,bytearray.length);
-            
-            //JOptionPane.showMessageDialog(null,"File transfer completed ");
-            //fout.flush();
-                        } 
+
+     } 
+                    }
+     private class ChangeProfile implements EventHandler<MouseEvent>,java.io.Serializable {
+ final FileChooser fileChooser=new FileChooser();
+  InputStream fin=null;
+  byte[] file_image=null;
+  byte[] buf =null;
+        @Override
+        public void handle(MouseEvent event) {
+             //To change body of generated methods, choose Tools | Templates.
+        
+             try{
+  
+  
+   configureFileChooser(fileChooser);
+   Stage stage=new Stage();
+                
+                     File file=   fileChooser.showOpenDialog(stage);
+                   
+      
+
+    fin=new FileInputStream(file);
+    ByteArrayOutputStream bos= new ByteArrayOutputStream();
+                 buf = new byte[1024];
+    for(int readnum;(readnum=fin.read(buf))!=-1; ){
+    bos.write(buf,0,readnum);
+}
+                file_image = bos.toByteArray();
+}    catch (FileNotFoundException ex) {
+         Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
+     } catch (IOException ex) { 
+         Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
+         
+     }
+             
+     try {
+          ByteArrayInputStream bis= new ByteArrayInputStream(file_image);
+         BufferedImage bim=ImageIO.read(bis);
+         profileicon=SwingFXUtils.toFXImage(bim, null );
+     } catch (IOException ex) {
+         Logger.getLogger(ClientHomePage.class.getName()).log(Level.SEVERE, null, ex);
+     }
+             
+             //imageview=new ImageView(profileicon);
+               imageview.setImage(profileicon);
+                          //  messageArea.getChildren().addAll(new ImageView(new Image(fin)));
+//                           byte[]bytearray=new byte [(int)file.length()];
+//            BufferedInputStream bin=new BufferedInputStream(fin);
+//               String d=Dformat.format(date)+" "+Dtformat.format(now);
+//     
+//            new Database_Conn().InsertPhoto(username,file_image,d);
+
+                        }
+        //returning the bytes of the selected image
+        public byte[] Getbytes()
+        {
+            return file_image;
+        }
+        
                     }
                     
                 

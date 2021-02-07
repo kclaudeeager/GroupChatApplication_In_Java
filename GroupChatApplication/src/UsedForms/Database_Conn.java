@@ -8,6 +8,10 @@ package UsedForms;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -50,7 +54,10 @@ public class Database_Conn  {
     try{
        Class.forName("com.mysql.jdbc.Driver");   //register driver
 
-      connection=DriverManager.getConnection( "jdbc:mysql://remotemysql.com/1aj1iyY7Kd","1aj1iyY7Kd","seMWU8RSow");
+//      connection=DriverManager.getConnection( "jdbc:mysql://remotemysql.com/1aj1iyY7Kd","1aj1iyY7Kd","seMWU8RSow");
+//      
+ connection=DriverManager.getConnection( "jdbc:mysql://localhost/mult_user_chat","root","");
+      
       System.out.println("Connected");
         
     }   catch (Exception ex)
@@ -60,6 +67,108 @@ public class Database_Conn  {
   return connection;
   
   }
+     public void SetProfile(File image)
+     {
+         
+          try {
+              
+              byte[] bt=new byte[1024];
+              ByteArrayOutputStream bos= new ByteArrayOutputStream();
+              FileInputStream  fin = null;
+              try {
+                  fin = new FileInputStream(image);
+              } catch (FileNotFoundException ex) {
+                  Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
+              }
+              try {
+                  for(int readnum;(readnum=fin.read(bt))!=-1; ){
+                      bos.write(bt,0,readnum);
+                  }         } catch (IOException ex) {
+                      Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
+                  }
+              byte[]  file_image = bos.toByteArray();
+              preparedStatement=createConnection().prepareStatement("update users set Profile= ? where Profile is NULL");
+              preparedStatement.setBytes(1, file_image);
+          
+              
+              
+              preparedStatement.executeUpdate();
+            
+          } catch (SQLException ex) {
+              
+              Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
+          }
+     }
+     public void Updatepassword(String Username,String formalpassword,String newPassword,String Confirmpass) 
+     {
+          try {
+              int id=  GetSender(Username);
+              boolean checkpass=false;
+              if(formalpassword.isEmpty()|| newPassword.isEmpty()||Confirmpass.isEmpty())
+              {
+                  checkpass=false;
+                  JOptionPane.showMessageDialog(null, "Fill all the fields please !", "Error", JOptionPane.ERROR_MESSAGE);
+                  
+              }
+              if(!newPassword.equals(Confirmpass))
+              {
+                  checkpass=false;
+                  JOptionPane.showMessageDialog(null, "Password mismatch !", "Error", JOptionPane.ERROR_MESSAGE);
+              }
+              try {
+                  preparedStatement=createConnection().prepareStatement("select Password from users where ID=? ");
+              } catch (SQLException ex) {
+                  Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
+              }
+              preparedStatement.setInt(1,id);
+              result= preparedStatement.executeQuery();
+              String password=null;
+              if(result.next())
+              {
+                  password=result.getString("Password");
+                  
+              }
+              if(formalpassword.equals(password))
+              {
+                  checkpass=true;
+              }
+              else
+              {
+                  checkpass=false;
+                  JOptionPane.showMessageDialog(null, "password not found !", "Error", JOptionPane.ERROR_MESSAGE);
+              }
+              if(checkpass==true)
+              {
+                  preparedStatement=createConnection().prepareStatement("update users set users.password= ? where ID=? ");
+                  preparedStatement.setString(1, newPassword);
+                  preparedStatement.setInt(2,id);
+                   preparedStatement.executeUpdate();
+                  JOptionPane.showMessageDialog(null,"password changed successfully to "+ newPassword+" !");
+                  
+                  
+              }
+              
+              
+              
+              
+          } catch (SQLException ex) {
+              Logger.getLogger(Database_Conn.class.getName()).log(Level.SEVERE, null, ex);
+          }
+            
+            
+            
+            
+     }
+     public void UpdateUser(String formalusername,String Username,byte[] profile) throws SQLException
+     {
+      int id=  GetSender(formalusername); 
+      preparedStatement=createConnection().prepareStatement("update users set profile= ?, username=? where ID=? ");
+          preparedStatement.setBytes(1, profile);
+           preparedStatement.setString(2, Username);
+            preparedStatement.setInt(3,id);
+              preparedStatement.executeUpdate();
+              JOptionPane.showMessageDialog(null,"Updated ! ");
+     }
      public void addData(String fn,String ln,String email,String username,String password){
 
      try{
@@ -80,6 +189,21 @@ public class Database_Conn  {
       JOptionPane.showMessageDialog(null,e.getMessage());
      }
   }
+     public Image GetprofileImage(String username) throws SQLException
+     {
+          Image image = null;
+        int UserId= GetSender(username);
+        preparedStatement=createConnection().prepareStatement("select profile from users where ID=?"); 
+         preparedStatement.setInt(1, UserId);
+         result=preparedStatement.executeQuery();
+         if(result.next())
+         {
+           InputStream imageFile = result.getBinaryStream("profile"); 
+           image = new Image(imageFile);
+         
+         }
+         return image;
+     }
 public String GetData(String username,String password)
         
 {

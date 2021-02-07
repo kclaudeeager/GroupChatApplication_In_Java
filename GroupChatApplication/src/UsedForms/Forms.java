@@ -6,7 +6,9 @@
 package UsedForms;
 
 
-import java.awt.Font;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -124,14 +126,22 @@ TextField name=new TextField();
         {
             if(e.getCode()==KeyCode.ENTER)
             {
-                 logingin();
+                try {
+                    logingin();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Forms.class.getName()).log(Level.SEVERE, null, ex);
+                }
                     if(!loggedUser.contains(User)&& User!=null)
                        loggedUser.add(User);
             }
         });
         submit.setOnAction(e->{
       
-       logingin();
+           try {
+               logingin();
+           } catch (SQLException ex) {
+               Logger.getLogger(Forms.class.getName()).log(Level.SEVERE, null, ex);
+           }
        if(!loggedUser.contains(User)&& User!=null)
        loggedUser.add(User);
                });
@@ -250,7 +260,7 @@ TextField name=new TextField();
         return  signUpPane;
         
     }
-    private void logingin()
+    private void logingin() throws SQLException
     {
          Database_Conn DC=new Database_Conn(); 
         User = DC.GetData(name.getText(), pass.getText()); 
@@ -266,7 +276,7 @@ TextField name=new TextField();
      
           name.clear();
           pass.clear();
-          //st.close();
+          st.close();
           
      }
         
