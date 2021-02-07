@@ -56,7 +56,9 @@ public class Database_Conn  {
 
 //      connection=DriverManager.getConnection( "jdbc:mysql://remotemysql.com/1aj1iyY7Kd","1aj1iyY7Kd","seMWU8RSow");
 //      
- connection=DriverManager.getConnection( "jdbc:mysql://localhost/mult_user_chat","root","");
+ //connection=DriverManager.getConnection( "jdbc:mysql://localhost/mult_user_chat","root","");
+ connection=DriverManager.getConnection( "jdbc:mysql://db4free.net/mult_user_chat","kwizera_claude","kwizeraeager@14");
+ 
       
       System.out.println("Connected");
         
